@@ -1,1 +1,2 @@
 - [git](./git): simple git-http-backend server.
+- [nextcloud](./nextcloud): [https://nextcloud.org](https://nextcloud.org).
