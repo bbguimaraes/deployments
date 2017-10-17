@@ -1,0 +1,167 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: uwsgi
+  spec:
+    lookupPolicy:
+      local: true
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: nginx
+  spec:
+    lookupPolicy:
+      local: true
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: uwsgi
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: uwsgi:latest
+    source:
+      type: Git
+      contextDir: git/uwsgi
+      git:
+        uri: https://gitlab.bbguimaraes.com/bbguimaraes/openshift-deployments.git
+    strategy:
+      type: Docker
+    triggers: []
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: nginx
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: nginx:latest
+    source:
+      type: Git
+      contextDir: git/nginx
+      git:
+        uri: https://gitlab.bbguimaraes.com/bbguimaraes/openshift-deployments.git
+    strategy:
+      type: Docker
+    triggers: []
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: uwsgi
+    labels:
+      git-server: uwsgi
+  spec:
+    replicas: 1
+    strategy:
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          git-server: uwsgi
+      spec:
+        containers:
+        - name: uwsgi
+          image: ' '
+          ports:
+          - containerPort: 8000
+            protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+          - name: git
+            mountPath: /srv/git
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+        volumes:
+        - name: git
+          emptyDir:
+            medium: Memory
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        containerNames:
+        - uwsgi
+        from:
+          kind: ImageStreamTag
+          name: uwsgi:latest
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: nginx
+    labels:
+      git-server: nginx
+  spec:
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          git-server: nginx
+      spec:
+        containers:
+        - name: nginx
+          image: ' '
+          ports:
+          - containerPort: 8000
+            protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+          - name: run
+            mountPath: /run/nginx
+          - name: varlib
+            mountPath: /var/lib/nginx
+          - name: git
+            mountPath: /srv/git
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+        volumes:
+        - name: run
+          emptyDir:
+            medium: Memory
+        - name: varlib
+          emptyDir:
+            medium: Memory
+        - name: git
+          emptyDir:
+            medium: Memory
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        containerNames:
+        - nginx
+        from:
+          kind: ImageStreamTag
+          name: nginx:latest
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: uwsgi
+  spec:
+    ports:
+    - name: 8000-tcp
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      gitlab: uwsgi
+    type: ClusterIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: nginx
+  spec:
+    ports:
+    - name: 8000-tcp
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      gitlab: nginx
+    type: ClusterIP
