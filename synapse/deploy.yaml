@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: synapse
+  spec:
+    lookupPolicy:
+      local: true
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: synapse
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: synapse:latest
+    source:
+      type: Git
+      contextDir: synapse/synapse
+      git:
+        uri: https://gitlab.bbguimaraes.com/bbguimaraes/openshift-deployments.git
+    strategy:
+      type: Docker
+    triggers: []
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: synapse
+    labels:
+      matrix: synapse
+  spec:
+    replicas: 1
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          matrix: synapse
+      spec:
+        containers:
+        - name: synapse
+          image: ' '
+          ports:
+          - containerPort: 8000
+            protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+          volumeMounts:
+          - name: synapse
+            mountPath: /var/lib/synapse
+        volumes:
+        - name: synapse
+          emptyDir:
+            medium: Memory
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        containerNames:
+        - synapse
+        from:
+          kind: ImageStreamTag
+          name: synapse:latest
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: synapse
+  spec:
+    ports:
+    - name: 8000-tcp
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      matrix: synapse
+    type: ClusterIP

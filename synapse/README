@@ -1,0 +1,25 @@
+Create objects.
+
+    oc create -f deploy.yaml
+
+Replace volume.
+
+    oc set volume deploymentconfig/synapse --add \
+        --name synapse --overwrite \
+        --type persistentVolumeClaim --claim-name matrix
+
+Build.
+
+    oc start-build --follow synapse
+
+Deploy.
+
+    oc rollout latest deploymentconfig/synapse
+
+Create route.
+
+    oc create route edge \
+        --hostname matrix.example.com \
+        --service synapse
+    oc annotate route synapse \
+        --overwrite haproxy.router.openshift.io/timeout=1m
