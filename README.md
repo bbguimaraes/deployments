@@ -1,3 +1,4 @@
 - [git](./git): simple git-http-backend server.
 - [nextcloud](./nextcloud): [https://nextcloud.org](https://nextcloud.org).
 - [synapse](./synapse): [Matrix](https://matrix.org) home server.
+- [static](./static): simple `nginx` static file server.
