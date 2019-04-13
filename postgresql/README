@@ -1,0 +1,17 @@
+Create objects.
+
+    oc create -f deploy.yaml
+
+Replace volume.
+
+    oc set volume deploymentconfig/postgresql \
+        --name varlib --overwrite \
+        --type persistentVolumeClaim --claim-name postgresql
+
+Build.
+
+    oc start-build --wait postgresql
+
+Deploy.
+
+    oc rollout latest deploymentconfig/postgresql
