@@ -4,9 +4,6 @@ Create objects.
 
 Replace volumes.
 
-    oc set volume deploymentconfig/postgresql \
-        --name varlib --overwrite \
-        --type persistentVolumeClaim --claim-name nextcloud-db
     oc set volume deploymentconfig/php \
         --name pkg --overwrite \
         --type persistentVolumeClaim --claim-name nextcloud-pkg
@@ -16,7 +13,6 @@ Replace volumes.
 
 Build.
 
-    oc start-build --wait postgresql &
     oc start-build --wait memcached &
     oc start-build --wait php &
     oc start-build --wait nginx &
@@ -24,7 +20,6 @@ Build.
 
 Deploy.
 
-    oc rollout latest deploymentconfig/postgresql
     oc rollout latest deploymentconfig/memcached
     oc rollout latest deploymentconfig/php
     oc rollout latest deploymentconfig/nginx

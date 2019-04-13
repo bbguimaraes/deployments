@@ -4,13 +4,6 @@ items:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
-    name: postgresql
-  spec:
-    lookupPolicy:
-      local: true
-- apiVersion: image.openshift.io/v1
-  kind: ImageStream
-  metadata:
     name: memcached
   spec:
     lookupPolicy:
@@ -29,22 +22,6 @@ items:
   spec:
     lookupPolicy:
       local: true
-- apiVersion: build.openshift.io/v1
-  kind: BuildConfig
-  metadata:
-    name: postgresql
-  spec:
-    output:
-      to:
-        kind: ImageStreamTag
-        name: postgresql:latest
-    source:
-      type: Git
-      contextDir: nextcloud/postgresql
-      git:
-        uri: https://gitlab.bbguimaraes.com/bbguimaraes/openshift-deployments.git
-      type: Docker
-    triggers: []
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
@@ -95,55 +72,6 @@ items:
         uri: https://gitlab.bbguimaraes.com/bbguimaraes/openshift-deployments.git
     strategy:
       type: Docker
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    name: postgresql
-    labels:
-      nextcloud: postgresql
-  spec:
-    replicas: 1
-    strategy:
-      type: Recreate
-    template:
-      metadata:
-        labels:
-          nextcloud: postgresql
-      spec:
-        containers:
-        - name: postgresql
-          image: ' '
-          ports:
-          - containerPort: 5432
-            protocol: TCP
-          securityContext:
-            readOnlyRootFilesystem: true
-          volumeMounts:
-          - name: run
-            mountPath: /run/postgresql
-          - name: varlib
-            mountPath: /var/lib/postgresql
-          livenessProbe:
-            exec:
-              command: ["/usr/local/bin/wrapper.sh", "psql", "-c", ""]
-          readinessProbe:
-            tcpSocket:
-              port: 5432
-        volumes:
-        - name: run
-          emptyDir:
-            medium: Memory
-        - name: varlib
-          emptyDir:
-            medium: Memory
-    triggers:
-    - type: ImageChange
-      imageChangeParams:
-        containerNames:
-        - postgresql
-        from:
-          kind: ImageStreamTag
-          name: postgresql:latest
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -286,19 +214,6 @@ items:
         from:
           kind: ImageStreamTag
           name: nginx:latest
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: postgresql
-  spec:
-    ports:
-    - name: 5432-tcp
-      port: 5432
-      protocol: TCP
-      targetPort: 5432
-    selector:
-      gitlab: postgresql
-    type: ClusterIP
 - apiVersion: v1
   kind: Service
   metadata:
