@@ -1,0 +1,394 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: redis
+  spec:
+    lookupPolicy:
+      local: true
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: gitaly
+  spec:
+    lookupPolicy:
+      local: true
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: unicorn
+  spec:
+    lookupPolicy:
+      local: true
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: redis
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: redis:latest
+    source:
+      type: Git
+      contextDir: gitlab/redis
+      git:
+        uri: https://gitlab.bbguimaraes.com/bbguimaraes/openshift-deployments.git
+    strategy:
+      type: Docker
+    triggers: []
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: gitaly
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: gitaly:latest
+    source:
+      type: Git
+      contextDir: gitlab/gitaly
+      git:
+        uri: https://gitlab.bbguimaraes.com/bbguimaraes/openshift-deployments.git
+    strategy:
+      type: Docker
+    triggers: []
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: unicorn
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: unicorn:latest
+    source:
+      type: Git
+      contextDir: gitlab/unicorn
+      git:
+        uri: https://gitlab.bbguimaraes.com/bbguimaraes/openshift-deployments.git
+    strategy:
+      type: Docker
+    triggers: []
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: redis
+    labels:
+      app: redis
+  spec:
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          app: redis
+      spec:
+        containers:
+        - name: redis
+          image: ' '
+          args:
+          - --protected-mode
+          - 'no'
+          ports:
+          - containerPort: 6379
+            protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+          - name: var
+            mountPath: /var/lib/redis
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+          readinessProbe:
+            exec:
+              command: ["/bin/redis-cli", "ping"]
+        volumes:
+        - name: var
+          emptyDir:
+            medium: Memory
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        containerNames:
+        - redis
+        from:
+          kind: ImageStreamTag
+          name: redis:latest
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: gitaly
+    labels:
+      gitlab: gitaly
+  spec:
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          gitlab: gitaly
+      spec:
+        containers:
+        - name: gitaly
+          image: ' '
+          ports:
+          - containerPort: 8000
+            protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+          - name: tmp
+            mountPath: /tmp
+          - name: log
+            mountPath: /var/log/gitlab
+          - name: git
+            mountPath: /var/lib/gitlab/repositories
+          - name: etc
+            mountPath: /etc/webapps
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+        volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory
+        - name: log
+          emptyDir:
+            medium: Memory
+        - name: git
+          emptyDir:
+            medium: Memory
+        - name: etc
+          emptyDir:
+            medium: Memory
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        containerNames:
+        - gitaly
+        from:
+          kind: ImageStreamTag
+          name: gitaly:latest
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: sidekiq
+    labels:
+      gitlab: sidekiq
+  spec:
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          gitlab: sidekiq
+      spec:
+        containers:
+        - name: sidekiq
+          image: ' '
+          command:
+          - bundle-2.5
+          - exec
+          - sidekiq
+          - -C
+          - config/sidekiq_queues.yml
+          - -e
+          - production
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+          - name: etc
+            mountPath: /etc/webapps
+          - name: log
+            mountPath: /var/log/gitlab
+          - name: tmp
+            mountPath: /tmp
+        volumes:
+        - name: etc
+          emptyDir:
+            medium: Memory
+        - name: log
+          emptyDir:
+            medium: Memory
+        - name: tmp
+          emptyDir:
+            medium: Memory
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        containerNames:
+        - sidekiq
+        from:
+          kind: ImageStreamTag
+          name: unicorn:latest
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: unicorn
+    labels:
+      gitlab: unicorn
+  spec:
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          gitlab: unicorn
+      spec:
+        containers:
+        - name: unicorn
+          image: ' '
+          ports:
+          - containerPort: 8000
+            protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+          - name: run
+            mountPath: /run/gitlab
+          - name: tmp
+            mountPath: /tmp
+          - name: log
+            mountPath: /var/log/gitlab
+          - name: vartmp
+            mountPath: /var/tmp
+          - name: etc
+            mountPath: /etc/webapps
+          readinessProbe:
+            exec:
+              command:
+              - curl
+              - --silent
+              - --show-error
+              - --fail
+              - localhost:8000/-/readiness
+        volumes:
+        - name: run
+          emptyDir:
+            medium: Memory
+        - name: tmp
+          emptyDir:
+            medium: Memory
+        - name: log
+          emptyDir:
+            medium: Memory
+        - name: vartmp
+          emptyDir:
+            medium: Memory
+        - name: etc
+          emptyDir:
+            medium: Memory
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        containerNames:
+        - unicorn
+        from:
+          kind: ImageStreamTag
+          name: unicorn:latest
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: workhorse
+    labels:
+      gitlab: workhorse
+  spec:
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          gitlab: workhorse
+      spec:
+        containers:
+        - name: workhorse
+          image: ' '
+          command:
+          - /usr/bin/gitlab-workhorse
+          args:
+          - -listenAddr
+          - 0.0.0.0:8000
+          - -authBackend
+          - http://unicorn:8000
+          - -documentRoot
+          - /usr/share/webapps/gitlab/public
+          ports:
+          - containerPort: 8000
+            protocol: TCP
+          volumeMounts:
+          - name: tmp
+            mountPath: /tmp
+          - name: etc
+            mountPath: /etc/webapps
+          securityContext:
+            readOnlyRootFilesystem: true
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+        volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory
+        - name: etc
+          emptyDir:
+            medium: Memory
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        containerNames:
+        - workhorse
+        from:
+          kind: ImageStreamTag
+          name: unicorn:latest
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: redis
+  spec:
+    ports:
+    - name: 6379-tcp
+      port: 6379
+      protocol: TCP
+      targetPort: 6379
+    selector:
+      app: redis
+    type: ClusterIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: gitaly
+  spec:
+    ports:
+    - name: 8000-tcp
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      gitlab: gitaly
+    type: ClusterIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: unicorn
+  spec:
+    ports:
+    - name: 8000-tcp
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      gitlab: unicorn
+    type: ClusterIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: workhorse
+  spec:
+    ports:
+    - name: 8000-tcp
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      gitlab: workhorse
+    type: ClusterIP
