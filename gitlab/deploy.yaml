@@ -189,7 +189,7 @@ items:
         - name: sidekiq
           image: ' '
           command:
-          - bundle-2.5
+          - bundle
           - exec
           - sidekiq
           - -C
