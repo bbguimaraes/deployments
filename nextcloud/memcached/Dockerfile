@@ -1,4 +1,4 @@
 FROM arch
 ENTRYPOINT ["/usr/bin/memcached"]
 EXPOSE 11211
-RUN pacman --noconfirm -Syu memcached && pacman --noconfirm -Sc
+RUN pacman --noconfirm -Syu memcached
