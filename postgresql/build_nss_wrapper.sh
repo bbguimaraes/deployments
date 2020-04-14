@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-PKG=nss_wrapper-1.1.3
+PKG=nss_wrapper-1.1.11
 BUILD_DIR=/tmp
 BUILD_PKGS='gcc make cmake'
 curl "https://ftp.samba.org/pub/cwrap/$PKG.tar.gz" | tar -C "$BUILD_DIR/" -xz
