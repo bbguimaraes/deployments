@@ -4,10 +4,10 @@ Create objects.
 
 Replace volumes.
 
-    oc set volume deploymentconfig/git-server-uwsgi \
+    oc set volume deploymentconfig/git-server-uwsgi --add \
         --name git --overwrite \
         --type persistentVolumeClaim --claim-name git
-    oc set volume deploymentconfig/git-server-nginx \
+    oc set volume deploymentconfig/git-server-nginx --add \
         --name git --overwrite \
         --type persistentVolumeClaim --claim-name git
 

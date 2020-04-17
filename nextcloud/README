@@ -4,10 +4,10 @@ Create objects.
 
 Replace volumes.
 
-    oc set volume deploymentconfig/php \
+    oc set volume deploymentconfig/php --add \
         --name pkg --overwrite \
         --type persistentVolumeClaim --claim-name nextcloud-pkg
-    oc set volume deploymentconfig/nginx \
+    oc set volume deploymentconfig/nginx --add \
         --name pkg --overwrite \
         --type persistentVolumeClaim --claim-name nextcloud-pkg
 
