@@ -6,10 +6,10 @@ Replace volumes.
 
     oc set volume deploymentconfig/php --add \
         --name pkg --overwrite \
-        --type persistentVolumeClaim --claim-name nextcloud-pkg
+        --type persistentVolumeClaim --claim-name nextcloud
     oc set volume deploymentconfig/nginx --add \
         --name pkg --overwrite \
-        --type persistentVolumeClaim --claim-name nextcloud-pkg
+        --type persistentVolumeClaim --claim-name nextcloud
 
 Build.
 

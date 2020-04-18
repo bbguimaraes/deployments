@@ -134,8 +134,15 @@ items:
           volumeMounts:
           - name: tmp
             mountPath: /tmp
-          - name: pkg
-            mountPath: /usr/share/nextcloud
+          - name: nextcloud
+            mountPath: /etc/webapps/nextcloud/config
+            subPath: config
+          - name: nextcloud
+            mountPath: /usr/share/webapps/nextcloud/apps
+            subPath: apps
+          - name: nextcloud
+            mountPath: /usr/share/webapps/nextcloud/data
+            subPath: data
           readinessProbe:
             tcpSocket:
               port: 8000
@@ -146,7 +153,7 @@ items:
         - name: tmp
           emptyDir:
             medium: Memory
-        - name: pkg
+        - name: nextcloud
           emptyDir:
             medium: Memory
     triggers:
@@ -183,8 +190,12 @@ items:
             mountPath: /var/lib/nginx
           - name: run
             mountPath: /run/nginx
-          - name: pkg
-            mountPath: /usr/share/nextcloud
+          - name: nextcloud
+            mountPath: /usr/share/webapps/nextcloud/apps
+            subPath: apps
+          - name: nextcloud
+            mountPath: /usr/share/webapps/nextcloud/data
+            subPath: data
           livenessProbe:
             tcpSocket:
               port: 8000
@@ -203,7 +214,7 @@ items:
         - name: run
           emptyDir:
             medium: Memory
-        - name: pkg
+        - name: nextcloud
           emptyDir:
             medium: Memory
     triggers:

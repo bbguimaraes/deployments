@@ -1,6 +1,7 @@
 FROM arch
-ENTRYPOINT ["/usr/bin/php-fpm"]
+RUN pacman --noconfirm -Syu nextcloud
 EXPOSE 8000
+ENTRYPOINT ["/usr/bin/php-fpm"]
 RUN sed -i '/^#en_US.UTF-8/s/^#//' /etc/locale.gen \
     && locale-gen \
     && pacman --noconfirm -Syu \
