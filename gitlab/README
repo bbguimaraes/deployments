@@ -13,7 +13,7 @@ Replace volumes.
     oc set volume deploymentconfig/workhorse --add \
         --name etc --overwrite \
         --type persistentVolumeClaim --claim-name etc
-    oc set volume deploymentconfig/unicorn --add \
+    oc set volume deploymentconfig/puma --add \
         --name etc --overwrite \
         --type persistentVolumeClaim --claim-name etc
     oc set volume deploymentconfig/sidekiq --add \
@@ -24,14 +24,14 @@ Build.
 
     oc start-build --wait redis &
     oc start-build --wait gitaly &
-    oc start-build --wait unicorn &
+    oc start-build --wait puma &
     wait
 
 Deploy.
 
     oc rollout latest deploymentconfig/redis
     oc rollout latest deploymentconfig/gitaly
-    oc rollout latest deploymentconfig/unicorn
+    oc rollout latest deploymentconfig/puma
     oc rollout latest deploymentconfig/sidekiq
     oc rollout latest deploymentconfig/workhorse
 

@@ -18,7 +18,7 @@ items:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
-    name: unicorn
+    name: puma
   spec:
     lookupPolicy:
       local: true
@@ -59,15 +59,15 @@ items:
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
-    name: unicorn
+    name: puma
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: unicorn:latest
+        name: puma:latest
     source:
       type: Git
-      contextDir: gitlab/unicorn
+      contextDir: gitlab/puma
       git:
         uri: https://gitlab.bbguimaraes.com/bbguimaraes/openshift-deployments.git
     strategy:
@@ -222,22 +222,22 @@ items:
         - sidekiq
         from:
           kind: ImageStreamTag
-          name: unicorn:latest
+          name: puma:latest
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
-    name: unicorn
+    name: puma
     labels:
-      gitlab: unicorn
+      gitlab: puma
   spec:
     replicas: 1
     template:
       metadata:
         labels:
-          gitlab: unicorn
+          gitlab: puma
       spec:
         containers:
-        - name: unicorn
+        - name: puma
           image: ' '
           ports:
           - containerPort: 8000
@@ -283,10 +283,10 @@ items:
     - type: ImageChange
       imageChangeParams:
         containerNames:
-        - unicorn
+        - puma
         from:
           kind: ImageStreamTag
-          name: unicorn:latest
+          name: puma:latest
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -309,7 +309,7 @@ items:
           - -listenAddr
           - 0.0.0.0:8000
           - -authBackend
-          - http://unicorn:8000
+          - http://puma:8000
           - -documentRoot
           - /usr/share/webapps/gitlab/public
           ports:
@@ -339,7 +339,7 @@ items:
         - workhorse
         from:
           kind: ImageStreamTag
-          name: unicorn:latest
+          name: puma:latest
 - apiVersion: v1
   kind: Service
   metadata:
@@ -369,7 +369,7 @@ items:
 - apiVersion: v1
   kind: Service
   metadata:
-    name: unicorn
+    name: puma
   spec:
     ports:
     - name: 8000-tcp
@@ -377,7 +377,7 @@ items:
       protocol: TCP
       targetPort: 8000
     selector:
-      gitlab: unicorn
+      gitlab: puma
     type: ClusterIP
 - apiVersion: v1
   kind: Service
