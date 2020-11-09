@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -eu
 
 initdb --locale en_US.UTF-8 --encoding UTF8

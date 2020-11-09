@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -eu
 
 . /usr/local/bin/wrapper_env.sh

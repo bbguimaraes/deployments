@@ -3,5 +3,6 @@ FROM arch
 ENTRYPOINT [ \
     "python", "-B", "-m", \
     "synapse.app.homeserver", "-c", "matrix.yaml"]
+EXPOSE 8000
 WORKDIR /var/lib/synapse
 RUN pacman --noconfirm -Syu matrix-synapse python-lxml python-netaddr

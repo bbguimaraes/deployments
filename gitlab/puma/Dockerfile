@@ -6,4 +6,5 @@ ENTRYPOINT [ \
     "bundle", "exec", "puma", \
     "-C", "config/puma.rb", "-e", "production"]
 ENV RAILS_ENV=production EXECJS_RUNTIME=Disabled
-RUN pacman --noconfirm -Syu ruby-pg yarn
+RUN pacman --noconfirm -Syu ruby-pg yarn \
+    && rm /usr/share/webapps/gitlab/public/uploads
