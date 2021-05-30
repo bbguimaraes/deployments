@@ -2,9 +2,6 @@
 set -euo pipefail
 
 vol=/mnt/bbguimaraes0-vol/nextcloud
-docker network ls --format '{{.Name}}' \
-    | grep --quiet --line-regexp nextcloud \
-    || docker network create nextcloud
 exec docker run \
     --name nextcloud-nginx \
     --detach \

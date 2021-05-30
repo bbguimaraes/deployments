@@ -1,9 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-docker network ls --format '{{.Name}}' \
-    | grep --quiet --line-regexp nextcloud \
-    || docker network create nextcloud
 exec docker run \
     --name nextcloud-memcached \
     --detach \

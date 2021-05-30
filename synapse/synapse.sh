@@ -2,9 +2,6 @@
 set -euo pipefail
 
 vol=/mnt/bbguimaraes0-vol/synapse
-docker network ls --format '{{.Name}}' \
-    | grep --quiet --line-regexp synapse \
-    || docker network create synapse
 exec docker run \
     --name synapse \
     --detach \

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ssl_dir=/mnt/bbguimaraes0-vol/letsencrypt/etc/live/bbguimaraes.com
-docker run \
+exec docker run \
     --name proxy \
     --detach \
     --network static \
@@ -15,6 +15,3 @@ docker run \
     --volume "$ssl_dir/fullchain.pem:/etc/nginx/ssl.crt:Z" \
     --volume "$ssl_dir/privkey.pem:/etc/nginx/ssl.key:Z" \
     proxy
-for x in git synapse nextcloud gitlab; do
-    docker network connect "$x" proxy
-done

@@ -2,9 +2,6 @@
 set -euo pipefail
 
 vol=/mnt/bbguimaraes0-vol/git
-docker network ls --format '{{.Name}}' \
-    | grep --quiet --line-regexp git \
-    || docker network create git
 exec docker run \
     --name git-nginx \
     --detach \
