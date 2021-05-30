@@ -12,7 +12,7 @@ exec podman run \
     --tmpfs /tmp \
     --tmpfs /var/log/gitlab \
     --volume "$vol/etc:/etc/webapps:z" \
-    --entrypoint bundle \
+    --entrypoint bundle-2.7 \
     gitlab-puma \
     exec sidekiq \
     -e production \
