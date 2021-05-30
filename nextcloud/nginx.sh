@@ -12,8 +12,8 @@ exec docker run \
     --network nextcloud \
     --network-alias nginx \
     --read-only \
-    --tmpfs /run/nginx:uid=1000140000 \
-    --tmpfs /var/lib/nginx:uid=1000150000 \
+    --tmpfs /run/nginx \
+    --tmpfs /var/lib/nginx \
     --volume "$vol/apps:/usr/share/webapps/nextcloud/apps:z" \
     --volume "$vol/data:/usr/share/webapps/nextcloud/data:z" \
     nextcloud-nginx

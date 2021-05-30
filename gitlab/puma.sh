@@ -13,8 +13,8 @@ exec docker run \
     --network-alias puma \
     --read-only \
     --tmpfs /tmp \
-    --tmpfs /run/gitlab:uid=1000170000 \
-    --tmpfs /var/log/gitlab:uid=1000170000 \
+    --tmpfs /run/gitlab \
+    --tmpfs /var/log/gitlab \
     --tmpfs /var/tmp \
     --volume "$vol/etc:/etc/webapps:z" \
     --volume "$vol/uploads:/var/lib/gitlab/uploads:z" \

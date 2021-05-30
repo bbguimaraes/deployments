@@ -11,7 +11,7 @@ exec docker run \
     --user 1000140000:users \
     --network static \
     --read-only \
-    --tmpfs /run/nginx:uid=1000140000 \
-    --tmpfs /var/lib/nginx:uid=1000140000 \
+    --tmpfs /run/nginx \
+    --tmpfs /var/lib/nginx \
     --volume "$vol:/srv/http:Z" \
     static

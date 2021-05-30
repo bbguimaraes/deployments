@@ -13,7 +13,7 @@ exec docker run \
     --network-alias sidekiq \
     --read-only \
     --tmpfs /tmp \
-    --tmpfs /var/log/gitlab:uid=1000170000 \
+    --tmpfs /var/log/gitlab \
     --volume "$vol/etc:/etc/webapps:z" \
     --entrypoint bundle \
     gitlab-puma \

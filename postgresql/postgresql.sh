@@ -8,7 +8,7 @@ docker run \
     --user 1000180000:users \
     --network nextcloud \
     --read-only \
-    --tmpfs /run/postgresql:uid=1000180000 \
+    --tmpfs /run/postgresql \
     --volume "$vol:/var/lib/postgresql:Z" \
     postgresql
 docker network connect gitlab postgresql

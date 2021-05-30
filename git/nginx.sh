@@ -11,7 +11,7 @@ exec docker run \
     --user 1000130000:users \
     --network git \
     --read-only \
-    --tmpfs /run/nginx:uid=1000130000 \
-    --tmpfs /var/lib/nginx:uid=1000130000 \
+    --tmpfs /run/nginx \
+    --tmpfs /var/lib/nginx \
     --volume "$vol:/srv/git:z" \
     git-nginx
