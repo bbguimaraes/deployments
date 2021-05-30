@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-exec docker run \
+exec podman run \
     --name nextcloud-memcached \
     --detach \
     --user 1000150000:users \

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-exec docker run \
+exec podman run \
     --name gitlab-redis \
     --detach \
     --user 1000170000:users \

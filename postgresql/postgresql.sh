@@ -2,7 +2,7 @@
 set -euo pipefail
 
 vol=/mnt/bbguimaraes0-vol/postgresql
-exec docker run \
+exec podman run \
     --name postgresql \
     --detach \
     --user 1000180000:users \

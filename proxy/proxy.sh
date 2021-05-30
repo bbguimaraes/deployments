@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ssl_dir=/mnt/bbguimaraes0-vol/letsencrypt/etc/live/bbguimaraes.com
-exec docker run \
+exec podman run \
     --name proxy \
     --detach \
     --network static \

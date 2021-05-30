@@ -2,7 +2,7 @@
 set -euo pipefail
 
 vol=/mnt/bbguimaraes0-vol/nextcloud
-exec docker run \
+exec podman run \
     --name nextcloud-php \
     --detach \
     --user 1000150000:users \

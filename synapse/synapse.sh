@@ -2,7 +2,7 @@
 set -euo pipefail
 
 vol=/mnt/bbguimaraes0-vol/synapse
-exec docker run \
+exec podman run \
     --name synapse \
     --detach \
     --user 1000100000:users \

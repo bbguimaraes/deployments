@@ -2,7 +2,7 @@
 set -euo pipefail
 
 vol=/mnt/bbguimaraes0-vol/gitlab
-exec docker run \
+exec podman run \
     --name gitlab-workhorse \
     --detach \
     --user 1000170000:users \

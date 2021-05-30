@@ -2,7 +2,7 @@
 set -euo pipefail
 
 vol=/mnt/bbguimaraes0-vol/git
-exec docker run \
+exec podman run \
     --name git-uwsgi \
     --detach \
     --user 1000130000:users \

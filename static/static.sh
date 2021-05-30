@@ -2,7 +2,7 @@
 set -euo pipefail
 
 vol=/mnt/bbguimaraes0-vol/bbguimaraes.com/bbguimaraes.com
-exec docker run \
+exec podman run \
     --name static \
     --detach \
     --user 1000140000:users \
