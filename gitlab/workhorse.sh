@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+vol=/mnt/bbguimaraes0-vol/gitlab
 docker network ls --format '{{.Name}}' \
     | grep --quiet --line-regexp gitlab \
     || docker network create gitlab
@@ -11,8 +12,8 @@ exec docker run \
     --network gitlab \
     --network-alias workhorse \
     --read-only \
-    --volume /srv/nfs/gitlab/etc:/etc/webapps:z \
-    --volume /srv/nfs/gitlab/uploads:/var/lib/gitlab/uploads:z \
+    --volume "$vol/etc:/etc/webapps:z" \
+    --volume "$vol/uploads:/var/lib/gitlab/uploads:z" \
     --entrypoint gitlab-workhorse \
     gitlab-puma \
     -listenAddr 0.0.0.0:8000 \

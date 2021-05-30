@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+vol=/mnt/bbguimaraes0-vol/postgresql
 docker run \
     --name postgresql \
     --detach \
@@ -8,6 +9,6 @@ docker run \
     --network nextcloud \
     --read-only \
     --tmpfs /run/postgresql:uid=1000180000 \
-    --volume /srv/nfs/postgresql:/var/lib/postgresql:Z \
+    --volume "$vol:/var/lib/postgresql:Z" \
     postgresql
 docker network connect gitlab postgresql

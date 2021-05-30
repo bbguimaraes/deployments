@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-ssl_dir=/srv/nfs/letsencrypt/etc/live/bbguimaraes.com
+ssl_dir=/mnt/bbguimaraes0-vol/letsencrypt/etc/live/bbguimaraes.com
 docker run \
     --name proxy \
     --detach \

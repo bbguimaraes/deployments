@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+vol=/mnt/bbguimaraes0-vol/gitlab
 docker network ls --format '{{.Name}}' \
     | grep --quiet --line-regexp gitlab \
     || docker network create gitlab
@@ -13,7 +14,7 @@ exec docker run \
     --read-only \
     --tmpfs /tmp \
     --tmpfs /var/log/gitlab:uid=1000170000 \
-    --volume /srv/nfs/gitlab/etc:/etc/webapps:z \
+    --volume "$vol/etc:/etc/webapps:z" \
     --entrypoint bundle \
     gitlab-puma \
     exec sidekiq \

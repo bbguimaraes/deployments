@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+vol=/mnt/bbguimaraes0-vol/gitlab
 docker network ls --format '{{.Name}}' \
     | grep --quiet --line-regexp gitlab \
     || docker network create gitlab
@@ -13,6 +14,6 @@ exec docker run \
     --read-only \
     --tmpfs /tmp \
     --tmpfs /var/log/gitlab \
-    --volume /srv/nfs/gitlab/etc:/etc/webapps:z \
-    --volume /srv/nfs/gitlab/git:/var/lib/gitlab/repositories:z \
+    --volume "$vol/etc:/etc/webapps:z" \
+    --volume "$vol/git:/var/lib/gitlab/repositories:z" \
     gitlab-gitaly
