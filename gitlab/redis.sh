@@ -10,4 +10,5 @@ exec podman run \
     --network-alias redis \
     --read-only \
     gitlab-redis \
+    /etc/redis/redis.conf \
     --protected-mode no
