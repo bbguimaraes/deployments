@@ -12,6 +12,6 @@ exec podman run \
     --read-only \
     --tmpfs /tmp \
     --volume "$vol/config:/etc/webapps/nextcloud/config:Z" \
-    --volume "$vol/apps:/usr/share/webapps/nextcloud/apps:z" \
+    --volume "$vol/apps:/usr/share/webapps/nextcloud/wapps:z" \
     --volume "$vol/data:/usr/share/webapps/nextcloud/data:z" \
     nextcloud-php
