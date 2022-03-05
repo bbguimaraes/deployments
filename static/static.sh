@@ -4,6 +4,7 @@ set -euo pipefail
 vol=/mnt/bbguimaraes0-vol/bbguimaraes.com/bbguimaraes.com
 exec podman run \
     --name static \
+    --replace \
     --detach \
     --user 1000140000:users \
     --network static \

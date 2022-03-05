@@ -3,6 +3,7 @@ set -euo pipefail
 
 exec podman run \
     --name gitlab-redis \
+    --replace \
     --detach \
     --user 1000170000:users \
     --network gitlab \

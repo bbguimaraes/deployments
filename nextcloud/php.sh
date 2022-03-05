@@ -4,6 +4,7 @@ set -euo pipefail
 vol=/mnt/bbguimaraes0-vol/nextcloud
 exec podman run \
     --name nextcloud-php \
+    --replace \
     --detach \
     --user 1000150000:users \
     --network nextcloud \

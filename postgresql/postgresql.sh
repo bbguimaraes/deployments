@@ -4,6 +4,7 @@ set -euo pipefail
 vol=/mnt/bbguimaraes0-vol/postgresql
 exec podman run \
     --name postgresql \
+    --replace \
     --detach \
     --user 1000180000:users \
     --network nextcloud \

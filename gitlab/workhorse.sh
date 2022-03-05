@@ -4,6 +4,7 @@ set -euo pipefail
 vol=/mnt/bbguimaraes0-vol/gitlab
 exec podman run \
     --name gitlab-workhorse \
+    --replace \
     --detach \
     --user 1000170000:users \
     --network gitlab \

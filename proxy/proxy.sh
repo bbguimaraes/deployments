@@ -4,6 +4,7 @@ set -euo pipefail
 ssl_dir=/mnt/bbguimaraes0-vol/letsencrypt/etc/live/bbguimaraes.com
 exec podman run \
     --name proxy \
+    --replace \
     --detach \
     --network static \
     --publish 80:8000 \
