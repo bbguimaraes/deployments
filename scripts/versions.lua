@@ -1,7 +1,8 @@
 #!/usr/bin/env lua
 local function version(img, pkg, cmd)
     cmd = string.format(
-        "podman run --rm --entrypoint pacman %s -%si %s"
+        "podman run"
+            .. " --rm --entrypoint pacman %s --dbpath /var/lib/pacman -%si %s"
             .. " | grep ^Version"
             .. " | sed 's/^[^:]*: //'",
         img, cmd, pkg)
