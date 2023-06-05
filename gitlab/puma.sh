@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-vol=/mnt/bbguimaraes0-vol/gitlab
+vol=/mnt/bbguimaraes1-vol/gitlab
 exec podman run \
     --name gitlab-puma \
     --replace \

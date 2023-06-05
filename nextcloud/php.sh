@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-vol=/mnt/bbguimaraes0-vol/nextcloud
+vol=/mnt/bbguimaraes1-vol/nextcloud
 exec podman run \
     --name nextcloud-php \
     --replace \

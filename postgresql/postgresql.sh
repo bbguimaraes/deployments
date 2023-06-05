@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-vol=/mnt/bbguimaraes0-vol/postgresql
+vol=/mnt/bbguimaraes1-vol/postgresql
 exec podman run \
     --name postgresql \
     --replace \

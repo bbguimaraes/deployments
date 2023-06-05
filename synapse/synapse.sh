@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-vol=/mnt/bbguimaraes0-vol/synapse
+vol=/mnt/bbguimaraes1-vol/synapse
 exec podman run \
     --name synapse \
     --replace \

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-vol=/mnt/bbguimaraes0-vol/bbguimaraes.com/bbguimaraes.com
+vol=/mnt/bbguimaraes1-vol/bbguimaraes.com/bbguimaraes.com
 exec podman run \
     --name static \
     --replace \

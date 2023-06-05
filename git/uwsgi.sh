@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-vol=/mnt/bbguimaraes0-vol/git
+vol=/mnt/bbguimaraes1-vol/git
 exec podman run \
     --name git-uwsgi \
     --replace \
