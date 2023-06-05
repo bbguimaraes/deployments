@@ -5,7 +5,6 @@ local t <const> = {
     static = "static/nginx",
     synapse = "synapse/synapse",
     git = {"git-nginx", "git-uwsgi"},
-    postgresql = {"postgresql"},
     nextcloud = {"nextcloud-memcached", "nextcloud-nginx", "nextcloud-php"},
     gitlab = {"gitlab-gitaly", "gitlab-puma", "gitlab-redis"},
     ["git-nginx"] = "git/nginx",
