@@ -8,7 +8,6 @@ exec podman run \
     --detach \
     --user 1000170000:users \
     --network gitlab \
-    --network-alias sidekiq \
     --read-only \
     --tmpfs /tmp \
     --tmpfs /var/log/gitlab \

@@ -8,7 +8,6 @@ exec podman run \
     --detach \
     --user 1000150000:users \
     --network nextcloud \
-    --network-alias nginx \
     --read-only \
     --tmpfs /run/nginx \
     --tmpfs /var/lib/nginx \

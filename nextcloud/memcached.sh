@@ -7,6 +7,5 @@ exec podman run \
     --detach \
     --user 1000150000:users \
     --network nextcloud \
-    --network-alias memcached \
     --read-only \
     nextcloud-memcached

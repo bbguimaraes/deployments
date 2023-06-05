@@ -7,7 +7,6 @@ exec podman run \
     --detach \
     --user 1000170000:users \
     --network gitlab \
-    --network-alias redis \
     --read-only \
     gitlab-redis \
     /etc/redis/redis.conf \

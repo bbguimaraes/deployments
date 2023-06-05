@@ -8,7 +8,6 @@ exec podman run \
     --detach \
     --user 1000150000:users \
     --network nextcloud \
-    --network-alias php \
     --read-only \
     --tmpfs /tmp \
     --volume "$vol/config:/etc/webapps/nextcloud/config:Z" \
