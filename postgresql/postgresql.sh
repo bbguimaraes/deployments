@@ -2,7 +2,7 @@
 set -euo pipefail
 
 main() {
-    [[ "$#" -eq 0 ]] && { start; return }
+    [[ "$#" -eq 0 ]] && { start; return; }
     local cmd=$1; shift
     case "$cmd" in
     dumpall) dumpall "$@";;
