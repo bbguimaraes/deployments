@@ -8,6 +8,7 @@ main() {
     dumpall) dumpall "$@";;
     load) load "$@";;
     psql) psql "$@";;
+    *) usage;;
     esac
 }
 
