@@ -15,5 +15,6 @@ exec podman run \
     --entrypoint bundle-2.7 \
     gitlab-puma \
     exec sidekiq \
-    -e production \
-    -C config/sidekiq_queues.yml
+    --environment production \
+    --concurrency 5 \
+    --config config/sidekiq_queues.yml
