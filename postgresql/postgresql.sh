@@ -7,12 +7,13 @@ main() {
     case "$cmd" in
     dumpall) dumpall "$@";;
     load) load "$@";;
+    psql) psql "$@";;
     esac
 }
 
 usage() {
     cat >&2 <<EOF
-Usage: $0 [dumpall|load]
+Usage: $0 [dumpall|load|psql]
 EOF
     return 1
 }
@@ -37,6 +38,11 @@ dumpall() {
 
 load() {
     exec podman exec --interactive postgresql /usr/local/bin/wrapper.sh psql
+}
+
+psql() {
+    exec podman exec --interactive --tty \
+        postgresql /usr/local/bin/wrapper.sh psql
 }
 
 main "$@"
