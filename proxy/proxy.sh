@@ -12,7 +12,7 @@ exec podman run \
     --publish 8448:8448 \
     --read-only \
     --tmpfs /run/nginx \
-    --tmpfs /var/lib/nginx \
+    --tmpfs /var/lib/nginx:size=4G \
     --volume "$ssl_dir/fullchain.pem:/etc/nginx/ssl.crt:Z" \
     --volume "$ssl_dir/privkey.pem:/etc/nginx/ssl.key:Z" \
     proxy
