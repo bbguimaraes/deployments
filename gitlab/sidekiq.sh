@@ -6,6 +6,8 @@ exec podman run \
     --name gitlab-sidekiq \
     --replace \
     --detach \
+    --cgroup-conf memory.high=$((128 * 1024 * 1024)) \
+    --memory-reservation 128m \
     --user 1000170000:users \
     --network gitlab \
     --read-only \
@@ -16,5 +18,5 @@ exec podman run \
     gitlab-puma \
     exec sidekiq \
     --environment production \
-    --concurrency 5 \
+    --concurrency 3 \
     --config config/sidekiq_queues.yml
