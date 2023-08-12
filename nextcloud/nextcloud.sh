@@ -5,20 +5,27 @@ main() {
     [[ "$#" -eq 0 ]] && usage
     local cmd=$1; shift
     case "$cmd" in
-    cron) cron;;
+    cron) cmd cron.php "$@";;
+    occ) cmd occ "$@";;
     *) usage;;
     esac
 }
 
 usage() {
     cat <<EOF
-Usage: $0 cron
+Usage: $0 CMD ARGS...
+
+Commands:
+
+    cron ARGS...
+    occ ARGS...
 EOF
     return 1
 }
 
-cron() {
-    exec podman exec nextcloud-php php /usr/share/webapps/nextcloud/cron.php
+cmd() {
+    local cmd=$1; shift
+    exec podman exec nextcloud-php php "/usr/share/webapps/nextcloud/$cmd" "$@"
 }
 
 main "$@"
