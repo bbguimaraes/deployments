@@ -11,4 +11,8 @@ RUN pacman --noconfirm -Syu ruby-pg yarn \
         /run/gitlab \
         /usr/share/webapps/gitlab/public/uploads \
         /var/log/gitlab \
-        /var/tmp
+        /var/tmp \
+    && sed -i \
+        -e '/batched_background_migrations_worker/s/\* \*/* 0/' \
+        -e '/batched_background_migration_worker_ci_database/s/\* \*/* 0/' \
+        /usr/share/webapps/gitlab/config/initializers/1_settings.rb
