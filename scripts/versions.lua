@@ -16,6 +16,7 @@ for _, x in ipairs{
     {"git-uwsgi", "uwsgi"},
     {"git-nginx", "nginx"},
     {"nextcloud-memcached", "memcached"},
+    {"nextcloud-php", "nextcloud"},
     {"nextcloud-php", "php"},
     {"nextcloud-php", "php-fpm"},
     {"nextcloud-nginx", "nginx"},
