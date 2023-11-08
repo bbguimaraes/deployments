@@ -6,6 +6,7 @@ exec podman run \
     --name gitlab-puma \
     --replace \
     --detach \
+    --stop-timeout 60 \
     --user 1000170000:users \
     --network gitlab \
     --read-only \
