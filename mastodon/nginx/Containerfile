@@ -1,0 +1,7 @@
+FROM arch
+EXPOSE 8000
+ENTRYPOINT ["/usr/bin/nginx"]
+RUN pacman --noconfirm -Syu nginx \
+    && rm -r /var/lib/nginx
+COPY nginx.conf /etc/nginx/
+COPY --from=mastodon-puma /var/lib/mastodon/public /var/lib/mastodon/public

@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 local all <const> = {
-    "postgresql", "static", "synapse", "git", "nextcloud", "gitlab",
+    "postgresql", "static", "synapse", "git", "nextcloud", "mastodon", "gitlab",
 }
 
 local t <const> = {
@@ -13,6 +13,10 @@ local t <const> = {
         "gitlab-redis", "gitlab-gitaly", "gitlab-sidekiq", "gitlab-workhorse",
         "gitlab-puma",
     },
+    mastodon = {
+        "mastodon-redis", "mastodon-sidekiq", "mastodon-streaming",
+        "mastodon-puma", "mastodon-nginx",
+    },
     proxy = "proxy/proxy.sh",
     ["git-uwsgi"] = "git/uwsgi.sh",
     ["git-nginx"] = "git/nginx.sh",
@@ -24,6 +28,11 @@ local t <const> = {
     ["gitlab-sidekiq"] = "gitlab/sidekiq.sh",
     ["gitlab-workhorse"] = "gitlab/workhorse.sh",
     ["gitlab-puma"] = "gitlab/puma.sh",
+    ["mastodon-redis"] = "mastodon/redis.sh",
+    ["mastodon-sidekiq"] = "mastodon/sidekiq.sh",
+    ["mastodon-streaming"] = "mastodon/streaming.sh",
+    ["mastodon-puma"] = "mastodon/puma.sh",
+    ["mastodon-nginx"] = "mastodon/nginx.sh",
 }
 
 if #arg == 0 then

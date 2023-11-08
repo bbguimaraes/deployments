@@ -1,0 +1,67 @@
+# Maintainer: Anthony Wang <a at exozy dot me>
+# Contributor: ny-a <nyaarch64 at gmail dot com>
+# Contributor: Daniel Moch <daniel@danielmoch.com>
+# Contributor: Jean Lucas <jean@4ray.co>
+# Contributor: Fredrick Brennan <copypaste@kittens.ph>
+
+pkgname=mastodon
+pkgver=4.2.1
+pkgrel=1
+pkgdesc='Your self-hosted, globally interconnected microblogging community'
+arch=(any)
+url=https://github.com/mastodon/mastodon
+license=(AGPL3)
+depends=(ffmpeg
+         gcc
+         git
+         imagemagick
+         libidn
+         libpqxx
+         libxml2
+         libxslt
+         libyaml
+         make
+         nodejs
+         protobuf
+         ruby-bundler
+         sudo
+         yarn
+         zlib)
+options=(!strip)
+source=(https://github.com/mastodon/mastodon/archive/v$pkgver.tar.gz)
+sha512sums=('54e3e14abbe9ce6b4ec72586b00d0e7845b8e7b0f18ee608ab452a4b56df257657ffcd1f3a0b8de715dbaad3edacbf31a4e20cef5f5d82b6902837ee9a6ab900')
+
+build() {
+  cd mastodon-$pkgver
+  mkdir -p .git # Fix husky error
+  patch --forward --strip 0 < ../../character_limit.patch
+  bundle config deployment 'true'
+  bundle config without 'development test'
+  bundle install -j$(getconf _NPROCESSORS_ONLN)
+  yarn install --pure-lockfile
+  bundle exec rails assets:precompile \
+    OTP_SECRET=precompile_placeholder \
+    SECRET_KEY_BASE=precompile_placeholder \
+    NODE_OPTIONS=--openssl-legacy-provider
+}
+
+package() {
+  install -d "$pkgdir"/{var/lib,etc/mastodon}
+  cp -a mastodon-$pkgver "$pkgdir"/var/lib/mastodon
+
+  # Put the config file in /etc and link to it
+  touch "$pkgdir"/etc/mastodon/mastodon.conf
+  ln -s /etc/mastodon/mastodon.conf "$pkgdir"/var/lib/mastodon/.env.production
+  ln -s /usr/bin/node "$pkgdir"/var/lib/mastodon/node
+
+  cd mastodon-$pkgver/dist
+
+  # Fix path discrepancies
+  sed -e 's/home\/mastodon\/live/var\/lib\/mastodon/g' \
+    -e 's/home\/mastodon\/.rbenv\/shims/usr\/bin/' \
+    -i mastodon-*.service
+  sed -e 's/home\/mastodon\/live/var\/lib\/mastodon/g' \
+    -i nginx.conf
+
+  install -Dm 644 mastodon-*.service -t "$pkgdir"/usr/lib/systemd/system
+}

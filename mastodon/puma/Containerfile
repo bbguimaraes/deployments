@@ -1,0 +1,19 @@
+FROM arch
+COPY PKGBUILD character_limit.patch /tmp/mastodon/
+EXPOSE 8000
+WORKDIR /var/lib/mastodon
+ENV RAILS_ENV=production
+RUN pacman --noconfirm -Syu \
+        base-devel ffmpeg git imagemagick libidn libpqxx libxslt libyaml \
+        nodejs protobuf ruby-bundler yarn \
+    && useradd aur \
+    && cd /tmp/mastodon \
+    && chown -R aur: . \
+    && runuser -u aur -- makepkg \
+    && pacman --noconfirm -U mastodon-*.pkg.tar.zst \
+    && cd - \
+    && rm -rf \
+        /tmp/mastodon/ /tmp/bundler-*/ /tmp/core-js-banners \
+        /tmp/v8-compile-cache-*/ /tmp/yarn-*/ /tmp/.yarn-cache-*/ \
+    && userdel aur \
+    && pacman --noconfirm -R --recursive base-devel

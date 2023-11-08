@@ -4,3 +4,5 @@
 - [static](./static): simple `nginx` static file server.
 - [postgresql](./postgresql): [https://postgresql.org](https://postgresql.org).
 - [gitlab](./gitlab): [https://gitlab.com](https://gitlab.com).
+- [mastodon](./mastodon):
+  [https://joinmastodon.org/](https://joinmastodon.org/).
