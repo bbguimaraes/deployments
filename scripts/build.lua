@@ -7,6 +7,10 @@ local t <const> = {
     git = {"git-nginx", "git-uwsgi"},
     nextcloud = {"nextcloud-memcached", "nextcloud-nginx", "nextcloud-php"},
     gitlab = {"gitlab-gitaly", "gitlab-puma", "gitlab-redis"},
+    mastodon = {
+        "mastodon-redis", "mastodon-sidekiq", "mastodon-streaming",
+        "mastodon-puma", "mastodon-nginx",
+    },
     ["git-nginx"] = "git/nginx",
     ["git-uwsgi"] = "git/uwsgi",
     ["nextcloud-memcached"] = "nextcloud/memcached",
@@ -15,6 +19,11 @@ local t <const> = {
     ["gitlab-gitaly"] = "gitlab/gitaly",
     ["gitlab-puma"] = "gitlab/puma",
     ["gitlab-redis"] = "gitlab/redis",
+    ["mastodon-redis"] = "mastodon/redis.sh",
+    ["mastodon-sidekiq"] = "mastodon/sidekiq.sh",
+    ["mastodon-streaming"] = "mastodon/streaming.sh",
+    ["mastodon-puma"] = "mastodon/mastodon.sh",
+    ["mastodon-nginx"] = "mastodon/nginx.sh",
 }
 
 local function build(tag, dir)
