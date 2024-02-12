@@ -14,6 +14,7 @@ exec podman run \
     --read-only \
     --tmpfs /tmp \
     --volume "$vol/etc:/etc/mastodon:z" \
+    --volume "$vol/public:/var/lib/mastodon/public/system:z" \
     --entrypoint bundle \
     mastodon-puma \
     exec sidekiq \
