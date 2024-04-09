@@ -17,6 +17,6 @@ Restart containers.
 Execute upgrade command.
 
     # podman exec gitlab-puma \
-        bundle-2.7 exec rake db:migrate:status RAILS_ENV=production
+        bundle exec rake db:migrate:status RAILS_ENV=production
     # podman exec gitlab-puma \
-        bundle-2.7 exec rake db:migrate RAILS_ENV=production
+        bundle exec rake db:migrate RAILS_ENV=production

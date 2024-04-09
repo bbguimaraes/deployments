@@ -24,7 +24,7 @@ EOF
 }
 
 bundle() {
-    exec podman exec gitlab-puma bundle-2.7 "$@"
+    exec podman exec gitlab-puma bundle "$@"
 }
 
 upgrade() {
