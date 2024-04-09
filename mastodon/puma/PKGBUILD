@@ -5,7 +5,7 @@
 # Contributor: Fredrick Brennan <copypaste@kittens.ph>
 
 pkgname=mastodon
-pkgver=4.2.1
+pkgver=4.2.8
 pkgrel=1
 pkgdesc='Your self-hosted, globally interconnected microblogging community'
 arch=(any)
@@ -29,11 +29,11 @@ depends=(ffmpeg
          zlib)
 options=(!strip)
 source=(https://github.com/mastodon/mastodon/archive/v$pkgver.tar.gz)
-sha512sums=('54e3e14abbe9ce6b4ec72586b00d0e7845b8e7b0f18ee608ab452a4b56df257657ffcd1f3a0b8de715dbaad3edacbf31a4e20cef5f5d82b6902837ee9a6ab900')
+sha512sums=('c48a04df9c59518f7325b8119bf943436e29ccbfaecff3f7b96162e77fa2012df3f5d4e92e209e233ca7c4646205f5e34bf5f7d22b973115b8e16b3b5ada1fb0')
 
 build() {
   cd mastodon-$pkgver
-  mkdir -p .git # Fix husky error
+  sed -i '/husky install/d' package.json # Stop husky from hijacking git hooks
   patch --forward --strip 0 < ../../character_limit.patch
   bundle config deployment 'true'
   bundle config without 'development test'
