@@ -13,4 +13,5 @@ exec podman run \
     --tmpfs /var/log/gitlab \
     --volume "$vol/etc:/etc/webapps:z" \
     --volume "$vol/git:/var/lib/gitlab/repositories:z" \
-    gitlab-gitaly
+    gitlab-gitaly \
+    "$@"

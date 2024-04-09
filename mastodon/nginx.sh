@@ -13,4 +13,5 @@ exec podman run \
     --tmpfs /var/cache/nginx \
     --tmpfs /var/lib/nginx \
     --volume "$vol/public:/var/lib/mastodon/public/system:z" \
-    mastodon-nginx
+    mastodon-nginx \
+    "$@"

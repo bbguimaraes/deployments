@@ -50,15 +50,15 @@ run() {
 }
 
 configure() {
-    rake mastodon:setup
+    rake mastodon:setup "$@"
 }
 
 rake() {
-    run bundle exec rake "$@" RAILS_ENV=production
+    run bundle exec rake RAILS_ENV=production "$@"
 }
 
 upgrade() {
-    bundle exec rails db:migrate RAILS_ENV=production
+    bundle exec rails db:migrate RAILS_ENV=production "$@"
 }
 
 main "$@"

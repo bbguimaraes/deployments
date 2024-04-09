@@ -13,4 +13,5 @@ exec podman run \
     --tmpfs /var/lib/nginx \
     --volume "$vol/apps:/usr/share/webapps/nextcloud/wapps:z" \
     --volume "$vol/data:/usr/share/webapps/nextcloud/data:z" \
-    nextcloud-nginx
+    nextcloud-nginx \
+    "$@"

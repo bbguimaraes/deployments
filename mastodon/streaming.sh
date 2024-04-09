@@ -15,4 +15,5 @@ exec podman run \
     --env PORT=8000 \
     --entrypoint node \
     mastodon-puma \
-    ./streaming
+    ./streaming \
+    "$@"

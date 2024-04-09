@@ -31,7 +31,8 @@ cmd_start() {
         --network static \
         --read-only \
         --volume "$vol:/var/lib/synapse:Z" \
-        synapse
+        synapse \
+        "$@"
 }
 
 change_password() {

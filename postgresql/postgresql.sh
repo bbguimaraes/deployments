@@ -35,16 +35,17 @@ start() {
 }
 
 dumpall() {
-    exec podman exec postgresql /usr/local/bin/wrapper.sh pg_dumpall
+    exec podman exec postgresql /usr/local/bin/wrapper.sh pg_dumpall "$@"
 }
 
 load() {
-    exec podman exec --interactive postgresql /usr/local/bin/wrapper.sh psql
+    exec podman exec --interactive \
+        postgresql /usr/local/bin/wrapper.sh psql "$@"
 }
 
 psql() {
     exec podman exec --interactive --tty \
-        postgresql /usr/local/bin/wrapper.sh psql
+        postgresql /usr/local/bin/wrapper.sh psql "$@"
 }
 
 main "$@"

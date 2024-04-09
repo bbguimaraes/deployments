@@ -16,4 +16,5 @@ exec podman run \
     --tmpfs /var/tmp \
     --volume "$vol/etc:/etc/webapps:z" \
     --volume "$vol/uploads:/var/lib/gitlab/uploads:z" \
-    gitlab-puma
+    gitlab-puma \
+    "$@"

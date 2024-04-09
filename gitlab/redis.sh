@@ -10,4 +10,5 @@ exec podman run \
     --read-only \
     gitlab-redis \
     /etc/redis/redis.conf \
-    --protected-mode no
+    --protected-mode no \
+    "$@"

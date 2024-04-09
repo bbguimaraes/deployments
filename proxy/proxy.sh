@@ -15,4 +15,5 @@ exec podman run \
     --tmpfs /var/lib/nginx:size=4G \
     --volume "$ssl_dir/fullchain.pem:/etc/nginx/ssl.crt:Z" \
     --volume "$ssl_dir/privkey.pem:/etc/nginx/ssl.key:Z" \
-    proxy
+    proxy \
+    "$@"

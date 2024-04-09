@@ -10,4 +10,5 @@ exec podman run \
     --network git \
     --read-only \
     --volume "$vol:/srv/git:z" \
-    git-uwsgi
+    git-uwsgi \
+    "$@"

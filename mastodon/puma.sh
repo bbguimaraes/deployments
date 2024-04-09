@@ -16,7 +16,8 @@ exec podman run \
     --env BIND=0.0.0.0 \
     --env PORT=8000 \
     mastodon-puma \
-    bundle exec puma -C config/puma.rb
+    bundle exec puma -C config/puma.rb \
+    "$@"
 
 #    --env LD_PRELOAD=libjemalloc.so \
 #    --workdir /run/mastodon \

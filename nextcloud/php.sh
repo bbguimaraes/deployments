@@ -13,4 +13,5 @@ exec podman run \
     --volume "$vol/config:/etc/webapps/nextcloud/config:Z" \
     --volume "$vol/apps:/usr/share/webapps/nextcloud/wapps:z" \
     --volume "$vol/data:/usr/share/webapps/nextcloud/data:z" \
-    nextcloud-php
+    nextcloud-php \
+    "$@"

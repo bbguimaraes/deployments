@@ -15,4 +15,5 @@ exec podman run \
     gitlab-puma \
     -listenAddr 0.0.0.0:8000 \
     -authBackend http://gitlab-puma:8000 \
-    -documentRoot /usr/share/webapps/gitlab/public
+    -documentRoot /usr/share/webapps/gitlab/public \
+    "$@"

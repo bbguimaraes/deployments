@@ -12,4 +12,5 @@ exec podman run \
     --tmpfs /run/nginx \
     --tmpfs /var/lib/nginx \
     --volume "$vol:/srv/http:Z" \
-    static
+    static \
+    "$@"

@@ -8,4 +8,5 @@ exec podman run \
     --user 1000150000:users \
     --network nextcloud \
     --read-only \
-    nextcloud-memcached
+    nextcloud-memcached \
+    "$@"

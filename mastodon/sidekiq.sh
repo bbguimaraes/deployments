@@ -20,4 +20,5 @@ exec podman run \
     exec sidekiq \
     --environment production \
     --concurrency 3 \
-    --config config/sidekiq.yml
+    --config config/sidekiq.yml \
+    "$@"
