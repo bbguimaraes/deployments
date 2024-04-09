@@ -20,6 +20,11 @@ local t <const> = {
     ["mastodon-nginx"] = "mastodon/nginx",
 }
 
+local function tag_prev(tag)
+    assert(os.execute(
+        string.format("podman tag -t %s:latest %s:prev", tag, tag)))
+end
+
 local function build(tag, dir)
     assert(os.execute(
         string.format("podman build -t %s %s", tag, dir)))
