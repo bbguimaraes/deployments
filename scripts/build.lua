@@ -21,7 +21,8 @@ local t <const> = {
 }
 
 local function build(tag, dir)
-    os.execute(string.format("podman build -t %s %s", tag, dir))
+    assert(os.execute(
+        string.format("podman build -t %s %s", tag, dir)))
 end
 
 if #arg == 0 then

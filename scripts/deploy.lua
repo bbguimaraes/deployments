@@ -44,10 +44,10 @@ for _, k in ipairs(arg) do
         error("invalid option: " .. k)
     end
     if type(v) == "string" then
-        os.execute(v)
+        assert(os.execute(v))
     else
         for _, vv in ipairs(v) do
-            os.execute(t[vv])
+            assert(os.execute(t[vv]))
         end
     end
 end
