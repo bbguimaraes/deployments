@@ -20,6 +20,10 @@ local t <const> = {
     ["mastodon-nginx"] = "mastodon/nginx",
 }
 
+local dep <const> = {
+    ["mastodon-puma"] = {"mastodon-nginx"},
+}
+
 local function tag_prev(tag)
     assert(os.execute(
         string.format("podman tag -t %s:latest %s:prev", tag, tag)))
@@ -28,6 +32,13 @@ end
 local function build(tag, dir)
     assert(os.execute(
         string.format("podman build -t %s %s", tag, dir)))
+    local d <const> = dep[tag]
+    if not d then
+        return
+    end
+    for _, tag in ipairs(d) do
+        build(tag, t[tag])
+    end
 end
 
 if #arg == 0 then
