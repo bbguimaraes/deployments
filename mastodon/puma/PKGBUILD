@@ -5,14 +5,13 @@
 # Contributor: Fredrick Brennan <copypaste@kittens.ph>
 
 pkgname=mastodon
-pkgver=4.2.8
+pkgver=4.2.12
 pkgrel=1
 pkgdesc='Your self-hosted, globally interconnected microblogging community'
 arch=(any)
 url=https://github.com/mastodon/mastodon
 license=(AGPL3)
 depends=(ffmpeg
-         gcc
          git
          imagemagick
          libidn
@@ -20,25 +19,32 @@ depends=(ffmpeg
          libxml2
          libxslt
          libyaml
-         make
          nodejs
          protobuf
          ruby-bundler
          sudo
+         valkey
          yarn
          zlib)
 options=(!strip)
 source=(https://github.com/mastodon/mastodon/archive/v$pkgver.tar.gz)
-sha512sums=('c48a04df9c59518f7325b8119bf943436e29ccbfaecff3f7b96162e77fa2012df3f5d4e92e209e233ca7c4646205f5e34bf5f7d22b973115b8e16b3b5ada1fb0')
+sha512sums=('511ce2df1860150c7544581628937cc91a1441de58656c8064702ccffc59197406b0c5df083ffa7e836c4e4354d0183778c1caa0561e0ab4a43ebb4c4afe765f')
 
 build() {
   cd mastodon-$pkgver
   sed -i '/husky install/d' package.json # Stop husky from hijacking git hooks
   patch --forward --strip 0 < ../../character_limit.patch
-  bundle config deployment 'true'
+  bundle config set deployment true
   bundle config without 'development test'
+  bundle config with 'pam_authentication'
+  bundle config set frozen false
+  bundle add erb
   bundle install -j$(getconf _NPROCESSORS_ONLN)
   yarn install --pure-lockfile
+  # https://aur.archlinux.org/packages/mastodon?O=0#comment-986425
+  cd vendor/bundle/ruby/*/gems/ox-*/ext/ox
+  make
+  cp ox.so ../../lib
   bundle exec rails assets:precompile \
     OTP_SECRET=precompile_placeholder \
     SECRET_KEY_BASE=precompile_placeholder \

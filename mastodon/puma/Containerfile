@@ -5,7 +5,7 @@ WORKDIR /var/lib/mastodon
 ENV RAILS_ENV=production
 RUN pacman --noconfirm -Syu \
         base-devel ffmpeg git imagemagick libidn libpqxx libxslt libyaml \
-        nodejs protobuf ruby-bundler yarn \
+        nodejs protobuf ruby-bundler valkey yarn \
     && useradd aur \
     && cd /tmp/mastodon \
     && chown -R aur: . \
