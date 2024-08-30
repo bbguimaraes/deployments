@@ -25,7 +25,7 @@ start() {
         --name postgresql \
         --replace \
         --detach \
-        --stop-timeout 60 \
+        --stop-timeout $((5 * 60)) \
         --user 1000180000:users \
         --network nextcloud \
         --read-only \
