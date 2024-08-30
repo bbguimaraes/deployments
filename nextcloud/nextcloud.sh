@@ -7,6 +7,7 @@ main() {
     case "$cmd" in
     cron) cmd cron.php "$@";;
     occ) cmd occ "$@";;
+    upgrade) upgrade;;
     *) usage;;
     esac
 }
@@ -26,6 +27,12 @@ EOF
 cmd() {
     local cmd=$1; shift
     exec podman exec nextcloud-php php "/usr/share/webapps/nextcloud/$cmd" "$@"
+}
+
+upgrade() {
+    cmd occ upgrade
+    cmd occ db:add-missing-indices
+    cmd occ maintenance:repair --include-expensive
 }
 
 main "$@"
