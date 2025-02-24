@@ -26,7 +26,8 @@ EOF
 
 cmd() {
     local cmd=$1; shift
-    exec podman exec nextcloud-php php "/usr/share/webapps/nextcloud/$cmd" "$@"
+    exec podman exec nextcloud-php \
+        php-legacy "/usr/share/webapps/nextcloud/$cmd" "$@"
 }
 
 upgrade() {

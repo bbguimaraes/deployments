@@ -1,12 +1,14 @@
 FROM arch
 RUN pacman --noconfirm -Syu nextcloud
 EXPOSE 8000
-ENTRYPOINT ["/usr/bin/php-fpm"]
+ENTRYPOINT ["/usr/bin/php-fpm-legacy"]
 RUN sed -i '/^#en_US.UTF-8/s/^#//' /etc/locale.gen \
     && locale-gen \
     && pacman --noconfirm -Syu \
         ffmpeg \
-        php-apcu php-fpm php-gd php-imagick php-intl php-memcached php-pgsql \
-    && rm /etc/php/php-fpm.d/www.conf /usr/share/webapps/nextcloud/wapps
-COPY php.ini /etc/php/conf.d/
-COPY php-fpm.conf /etc/php/php-fpm.d/
+        php-legacy-apcu php-legacy-fpm php-legacy-gd php-legacy-imagick \
+        php-legacy-intl php-legacy php-legacy-memcached php-legacy-pgsql \
+    && rm /etc/php-legacy/php-fpm.d/www.conf /usr/share/webapps/nextcloud/wapps
+COPY php.ini /etc/php-legacy/conf.d/
+COPY php-fpm.ini /etc/php-legacy/
+COPY php-fpm.conf /etc/php-legacy/php-fpm.d/
