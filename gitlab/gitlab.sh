@@ -8,6 +8,7 @@ main() {
     local cmd=$1; shift
     case "$cmd" in
     bundle) bundle "$@";;
+    check) check "$@";;
     logs) logs "$@";;
     upgrade) upgrade "$@";;
     *) usage;;
@@ -21,6 +22,7 @@ Usage: $0 CMD [ARGS...]
 Commands:
 
     bundle ARGS...
+    check
     logs
     upgrade
 EOF
@@ -29,6 +31,11 @@ EOF
 
 bundle() {
     exec podman exec gitlab-puma bundle "$@"
+}
+
+check() {
+    bundle exec rake gitlab:env:info RAILS_ENV=production
+    bundle exec rake gitlab:check RAILS_ENV=production
 }
 
 logs() {
