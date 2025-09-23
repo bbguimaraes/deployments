@@ -1,6 +1,6 @@
 --- PKGBUILD
 +++ PKGBUILD
-@@ -20,28 +20,20 @@
+@@ -22,29 +22,21 @@
           libxslt
           libyaml
           nodejs
@@ -9,55 +9,55 @@
           ruby-bundler
           sudo
           valkey
-          yarn
-          zlib)
+          zlib
+          yarn-berry)
 -backup=(etc/mastodon.conf)
 -install=mastodon.install
  options=(!strip)
--source=(https://github.com/mastodon/mastodon/archive/v$pkgver.tar.gz
+ source=(https://github.com/mastodon/mastodon/archive/v$pkgver.tar.gz
 -        mastodon.target
 -        mastodon.sysusers.d
--        mastodon.tmpfiles.d)
--sha512sums=('511ce2df1860150c7544581628937cc91a1441de58656c8064702ccffc59197406b0c5df083ffa7e836c4e4354d0183778c1caa0561e0ab4a43ebb4c4afe765f'
--            'ce9fe810654f3a641bbc1ea9707fa1b149e3955bfc55da20ed27e58f9c768dd65534fa43c9d67042fff40c48ef33c660efac8ef11c60f1111173326e2a93814c'
--            '4ee4210bde391e6dc782cb7c14f2cb968c95ad541aa0efcf843a811f8cc5f0d1067ee3c8346bb412aa9fd1dd5a8bd05a4524df7dc4a106957009853dd237074a'
--            '27c4eb01d462c525b59e5808a3b2501b63a34425752128388fbde82f7eb5944b20d2f8d8b1be8ed8adb165cab4cfb8e13f90215f20989ca671a0422ffa37001f')
-+source=(https://github.com/mastodon/mastodon/archive/v$pkgver.tar.gz)
-+sha512sums=('511ce2df1860150c7544581628937cc91a1441de58656c8064702ccffc59197406b0c5df083ffa7e836c4e4354d0183778c1caa0561e0ab4a43ebb4c4afe765f')
+-        mastodon.tmpfiles.d
+         devise_pam.patch)
+ sha256sums=('ede116b80a525462f5ea68d046a4cdd787930fc6d2f9327c140756311ee07848'
+-            'e9928ced31f6490476100f02f2e158e41a076988dd7f3dff8f21d245bc2bb0ff'
+-            '1b67693f7de5802a34985b9ac969497fc6e6042dcae0b8abf6595b9fe15ee80e'
+-            '3fdd54dd1f374b7206c8beaebafdf890e74d30385f0c93f9cd99e1e4be92f8fa'
+             '8415cded8d5f159623439b8ab0a87c1ac653a32f6945eebc9140195289c1ece6')
+ prepare() {
+ 	cd mastodon-$pkgver
+ 	patch -p1 < ../devise_pam.patch
++	patch --forward --strip 0 < ../../character_limit.patch
+ }
  
  build() {
-   cd mastodon-$pkgver
-   sed -i '/husky install/d' package.json # Stop husky from hijacking git hooks
-+  patch --forward --strip 0 < ../../character_limit.patch
-   bundle config set deployment true
-   bundle config without 'development test'
-   bundle config with 'pam_authentication'
-@@ -53,21 +45,21 @@
-   cd vendor/bundle/ruby/*/gems/ox-*/ext/ox
-   make
-   cp ox.so ../../lib
-+  bundle exec rails assets:precompile \
-+    OTP_SECRET=precompile_placeholder \
-+    SECRET_KEY_BASE=precompile_placeholder \
-+    NODE_OPTIONS=--openssl-legacy-provider
+@@ -65,21 +57,21 @@
+ 	cd vendor/bundle/ruby/*/gems/ox-*/ext/ox
+ 	make
+ 	cp ox.so ../../lib
++	bundle exec rails assets:precompile \
++		OTP_SECRET=precompile_placeholder \
++		SECRET_KEY_BASE=precompile_placeholder \
++		NODE_OPTIONS=--openssl-legacy-provider
  }
  
  package() {
--  install -d "$pkgdir"/{var/lib,etc}
-+  install -d "$pkgdir"/{var/lib,etc/mastodon}
-   cp -a mastodon-$pkgver "$pkgdir"/var/lib/mastodon
+-	install -d "$pkgdir"/{var/lib,etc}
++	install -d "$pkgdir"/{var/lib,etc/mastodon}
+ 	cp -a mastodon-$pkgver "$pkgdir"/var/lib/mastodon
  
-   # Put the config file in /etc and link to it
--  touch "$pkgdir"/etc/mastodon.conf
--  ln -s /etc/mastodon.conf "$pkgdir"/var/lib/mastodon/.env.production
-+  touch "$pkgdir"/etc/mastodon/mastodon.conf
-+  ln -s /etc/mastodon/mastodon.conf "$pkgdir"/var/lib/mastodon/.env.production
-   ln -s /usr/bin/node "$pkgdir"/var/lib/mastodon/node
+-	 # Put the config file in /etc and link to it
+-	touch "$pkgdir"/etc/mastodon.conf
+-	ln -s /etc/mastodon.conf "$pkgdir"/var/lib/mastodon/.env.production
++	# Put the config file in /etc and link to it
++	touch "$pkgdir"/etc/mastodon/mastodon.conf
++	ln -s /etc/mastodon/mastodon.conf "$pkgdir"/var/lib/mastodon/.env.production
+ 	ln -s /usr/bin/node "$pkgdir"/var/lib/mastodon/node
  
--  install -Dm 644 mastodon.target -t "$pkgdir"/usr/lib/systemd/system
--  install -Dm 644 mastodon.sysusers.d "$pkgdir"/usr/lib/sysusers.d/mastodon.conf
--  install -Dm 644 mastodon.tmpfiles.d "$pkgdir"/usr/lib/tmpfiles.d/mastodon.conf
+-	install -Dm 644 mastodon.target -t "$pkgdir"/usr/lib/systemd/system
+-	install -Dm 644 mastodon.sysusers.d "$pkgdir"/usr/lib/sysusers.d/mastodon.conf
+-	install -Dm 644 mastodon.tmpfiles.d "$pkgdir"/usr/lib/tmpfiles.d/mastodon.conf
 -
-   cd mastodon-$pkgver/dist
+ 	cd mastodon-$pkgver/dist
  
-   # Fix path discrepancies
+ 	# Fix path discrepancies

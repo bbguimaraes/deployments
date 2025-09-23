@@ -1,11 +1,13 @@
-# Maintainer: Anthony Wang <a at exozy dot me>
+# Maintainer: Vamp898 <vamp898-aur@ikaros.space>
+# Contributor: Bjoern Franke <bjo+aur@schafweide.org>
+# Contributor: Anthony Wang <a at exozy dot me>
 # Contributor: ny-a <nyaarch64 at gmail dot com>
 # Contributor: Daniel Moch <daniel@danielmoch.com>
 # Contributor: Jean Lucas <jean@4ray.co>
 # Contributor: Fredrick Brennan <copypaste@kittens.ph>
 
 pkgname=mastodon
-pkgver=4.2.12
+pkgver=4.4.3
 pkgrel=1
 pkgdesc='Your self-hosted, globally interconnected microblogging community'
 arch=(any)
@@ -13,9 +15,9 @@ url=https://github.com/mastodon/mastodon
 license=(AGPL3)
 depends=(ffmpeg
          git
-         imagemagick
          libidn
          libpqxx
+         libvips
          libxml2
          libxslt
          libyaml
@@ -24,50 +26,60 @@ depends=(ffmpeg
          ruby-bundler
          sudo
          valkey
-         yarn
-         zlib)
+         zlib
+         yarn-berry)
 options=(!strip)
-source=(https://github.com/mastodon/mastodon/archive/v$pkgver.tar.gz)
-sha512sums=('511ce2df1860150c7544581628937cc91a1441de58656c8064702ccffc59197406b0c5df083ffa7e836c4e4354d0183778c1caa0561e0ab4a43ebb4c4afe765f')
+source=(https://github.com/mastodon/mastodon/archive/v$pkgver.tar.gz
+        devise_pam.patch)
+sha256sums=('ede116b80a525462f5ea68d046a4cdd787930fc6d2f9327c140756311ee07848'
+            '8415cded8d5f159623439b8ab0a87c1ac653a32f6945eebc9140195289c1ece6')
+prepare() {
+	cd mastodon-$pkgver
+	patch -p1 < ../devise_pam.patch
+	patch --forward --strip 0 < ../../character_limit.patch
+}
 
 build() {
-  cd mastodon-$pkgver
-  sed -i '/husky install/d' package.json # Stop husky from hijacking git hooks
-  patch --forward --strip 0 < ../../character_limit.patch
-  bundle config set deployment true
-  bundle config without 'development test'
-  bundle config with 'pam_authentication'
-  bundle config set frozen false
-  bundle add erb
-  bundle install -j$(getconf _NPROCESSORS_ONLN)
-  yarn install --pure-lockfile
-  # https://aur.archlinux.org/packages/mastodon?O=0#comment-986425
-  cd vendor/bundle/ruby/*/gems/ox-*/ext/ox
-  make
-  cp ox.so ../../lib
-  bundle exec rails assets:precompile \
-    OTP_SECRET=precompile_placeholder \
-    SECRET_KEY_BASE=precompile_placeholder \
-    NODE_OPTIONS=--openssl-legacy-provider
+	export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+	cd mastodon-$pkgver
+	sed -i '/husky install/d' package.json # Stop husky from hijacking git hooks
+	bundle config set deployment true
+	bundle config without 'development test'
+	bundle config with 'pam_authentication'
+	# Disable LTO which breaks the C extension of the google-protobuf gem https://github.com/protocolbuffers/protobuf/issues/11935
+	bundle config --local build.google-protobuf "-- --with-cflags='$(ruby -r rbconfig -e 'print RbConfig::CONFIG["CFLAGS"]' | sed -e 's/-Werror=format-security//' -e 's/-flto=auto/-fno-lto/')' --with-ldflags='$(ruby -r rbconfig -e 'print RbConfig::CONFIG["LDFLAGS"]' | sed -e 's/-flto=auto/-fno-lto/')'"
+	bundle config set frozen false
+	bundle add erb
+	bundle install -j$(getconf _NPROCESSORS_ONLN)
+	corepack enable --install-directory . yarn
+	./yarn install
+	# https://aur.archlinux.org/packages/mastodon?O=0#comment-986425
+	cd vendor/bundle/ruby/*/gems/ox-*/ext/ox
+	make
+	cp ox.so ../../lib
+	bundle exec rails assets:precompile \
+		OTP_SECRET=precompile_placeholder \
+		SECRET_KEY_BASE=precompile_placeholder \
+		ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=precompile_placeholder \
+		ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=precompile_placeholder \
+		ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=precompile_placeholder \
+		NODE_OPTIONS=--openssl-legacy-provider
 }
 
 package() {
-  install -d "$pkgdir"/{var/lib,etc/mastodon}
-  cp -a mastodon-$pkgver "$pkgdir"/var/lib/mastodon
+	install -d "$pkgdir"/{var/lib,etc/mastodon}
+	cp -a mastodon-$pkgver "$pkgdir"/var/lib/mastodon
 
-  # Put the config file in /etc and link to it
-  touch "$pkgdir"/etc/mastodon/mastodon.conf
-  ln -s /etc/mastodon/mastodon.conf "$pkgdir"/var/lib/mastodon/.env.production
-  ln -s /usr/bin/node "$pkgdir"/var/lib/mastodon/node
+	# Put the config file in /etc and link to it
+	touch "$pkgdir"/etc/mastodon/mastodon.conf
+	ln -s /etc/mastodon/mastodon.conf "$pkgdir"/var/lib/mastodon/.env.production
+	ln -s /usr/bin/node "$pkgdir"/var/lib/mastodon/node
 
-  cd mastodon-$pkgver/dist
+	cd mastodon-$pkgver/dist
 
-  # Fix path discrepancies
-  sed -e 's/home\/mastodon\/live/var\/lib\/mastodon/g' \
-    -e 's/home\/mastodon\/.rbenv\/shims/usr\/bin/' \
-    -i mastodon-*.service
-  sed -e 's/home\/mastodon\/live/var\/lib\/mastodon/g' \
-    -i nginx.conf
+	# Fix path discrepancies
+	sed -e 's/home\/mastodon\/live/var\/lib\/mastodon/g' -e 's/home\/mastodon\/.rbenv\/shims/usr\/bin/' -i mastodon-*.service
+	sed -e 's/home\/mastodon\/live/var\/lib\/mastodon/g' -i nginx.conf
 
-  install -Dm 644 mastodon-*.service -t "$pkgdir"/usr/lib/systemd/system
+	install -Dm 644 mastodon-*.service -t "$pkgdir"/usr/lib/systemd/system
 }
