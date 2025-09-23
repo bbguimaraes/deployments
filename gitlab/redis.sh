@@ -9,6 +9,6 @@ exec podman run \
     --network gitlab \
     --read-only \
     gitlab-redis \
-    /etc/redis/redis.conf \
+    /etc/valkey/valkey.conf \
     --protected-mode no \
     "$@"
