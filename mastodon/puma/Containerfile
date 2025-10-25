@@ -4,9 +4,9 @@ EXPOSE 8000
 WORKDIR /var/lib/mastodon
 ENV RAILS_ENV=production
 RUN pacman --noconfirm -Syu \
-        base-devel ffmpeg git libidn libvips libpqxx libxslt libyaml nodejs \
-        protobuf ruby-bundler valkey \
-    && useradd aur \
+        base-devel corepack ffmpeg git libidn libvips libpqxx libxslt libyaml \
+        nodejs protobuf ruby-bundler valkey \
+    && useradd aur --home-dir /tmp/aur --create-home \
     && mkdir /tmp/yarn-berry \
     && cd /tmp/yarn-berry \
     && chown -R aur: . \
@@ -24,8 +24,9 @@ RUN pacman --noconfirm -Syu \
     && pacman --noconfirm -U mastodon-*.pkg.tar.zst \
     && cd - \
     && rm -rf \
-        /tmp/yarn-berry /tmp/mastodon/ /tmp/bundler-*/ /tmp/core-js-banners \
-        /tmp/v8-compile-cache-*/ /tmp/yarn-*/ /tmp/.yarn-cache-*/ \
+        /tmp/aur/ /tmp/yarn-berry/ /tmp/mastodon/ /tmp/bundler-*/ \
+        /tmp/core-js-banners /tmp/v8-compile-cache-*/ /tmp/yarn-*/ \
+        /tmp/.yarn-cache-*/ \
     && userdel aur \
     && pacman --noconfirm -R --recursive base-devel \
     && pacman --noconfirm -Scc
