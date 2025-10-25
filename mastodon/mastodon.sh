@@ -58,7 +58,7 @@ rake() {
 }
 
 upgrade() {
-    bundle exec rails db:migrate RAILS_ENV=production "$@"
+    run bundle exec rails db:migrate RAILS_ENV=production "$@"
 }
 
 main "$@"

@@ -6,9 +6,10 @@ RUN pacman --noconfirm -Syu gitlab \
 ENTRYPOINT [ \
     "bundle", "exec", "puma", \
     "-C", "config/puma.rb", "-e", "production"]
-ENV RAILS_ENV=production EXECJS_RUNTIME=Disabled
 RUN pacman --noconfirm -Syu ruby-pg yarn \
     && pacman --noconfirm -Scc
+ENV RAILS_ENV=production EXECJS_RUNTIME=Disabled
+RUN chmod o+rx /var/lib/gitlab \
     && rm -r \
         /run/gitlab \
         /usr/share/webapps/gitlab/public/uploads \
