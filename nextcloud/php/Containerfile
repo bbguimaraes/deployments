@@ -1,5 +1,6 @@
 FROM arch
-RUN pacman --noconfirm -Syu nextcloud
+RUN pacman --noconfirm -Syu nextcloud \
+    && pacman --noconfirm -Scc
 EXPOSE 8000
 ENTRYPOINT ["/usr/bin/php-fpm-legacy"]
 RUN sed -i '/^#en_US.UTF-8/s/^#//' /etc/locale.gen \
@@ -8,6 +9,7 @@ RUN sed -i '/^#en_US.UTF-8/s/^#//' /etc/locale.gen \
         ffmpeg \
         php-legacy-apcu php-legacy-fpm php-legacy-gd php-legacy-imagick \
         php-legacy-intl php-legacy php-legacy-memcached php-legacy-pgsql \
+    && pacman --noconfirm -Scc \
     && rm /etc/php-legacy/php-fpm.d/www.conf /usr/share/webapps/nextcloud/wapps
 COPY php.ini /etc/php-legacy/conf.d/
 COPY php-fpm.ini /etc/php-legacy/

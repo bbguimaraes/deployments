@@ -2,6 +2,7 @@ FROM arch
 ENTRYPOINT ["/bin/redis-server"]
 EXPOSE 6379
 RUN pacman --noconfirm -Syu valkey \
+    && pacman --noconfirm -Scc \
     && sed -i \
         -e '/^bind /s/^/#/' -e '/^dir /s/^/#/' -e '$asave ""' \
         /etc/valkey/valkey.conf

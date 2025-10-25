@@ -13,4 +13,5 @@ chown postgres .
 runuser -u postgres -- sh -c 'cmake .. && make'
 make install
 pacman --noconfirm -Rs $BUILD_PKGS
+pacman --noconfirm -Scc
 rm -rf "$BUILD_DIR/$PKG/"

@@ -1,7 +1,8 @@
 FROM arch
 EXPOSE 8000
 WORKDIR /usr/share/webapps/gitlab
-RUN pacman --noconfirm -Syu gitlab
+RUN pacman --noconfirm -Syu gitlab \
+    && pacman --noconfirm -Scc
 ENTRYPOINT ["gitaly", "/etc/gitlab-gitaly/config.toml"]
 RUN chmod o+rx /var/lib/gitlab \
     && ln -sf \

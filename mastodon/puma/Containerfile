@@ -27,4 +27,5 @@ RUN pacman --noconfirm -Syu \
         /tmp/yarn-berry /tmp/mastodon/ /tmp/bundler-*/ /tmp/core-js-banners \
         /tmp/v8-compile-cache-*/ /tmp/yarn-*/ /tmp/.yarn-cache-*/ \
     && userdel aur \
-    && pacman --noconfirm -R --recursive base-devel
+    && pacman --noconfirm -R --recursive base-devel \
+    && pacman --noconfirm -Scc
