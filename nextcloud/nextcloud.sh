@@ -9,6 +9,7 @@ main() {
     case "$cmd" in
     cron) cmd cron.php "$@";;
     logs) logs "$@";;
+    news) news "$@";;
     occ) cmd occ "$@";;
     upgrade) upgrade;;
     *) usage;;
@@ -23,6 +24,7 @@ Commands:
 
     cron ARGS...
     logs
+    news feed set-url ID LINK URL
     occ ARGS...
 EOF
     return 1
@@ -42,6 +44,39 @@ upgrade() {
 
 logs() {
     podman exec nextcloud-php cat "$DIR/data/nextcloud.log"
+}
+
+news() {
+    [[ "$#" -eq 0 ]] && usage
+    local cmd=$1; shift
+    case "$cmd" in
+    feed) news_feed "$@";;
+    *) usage;;
+    esac
+}
+
+news_feed() {
+    [[ "$#" -eq 0 ]] && usage
+    local cmd=$1; shift
+    case "$cmd" in
+    set-url) news_feed_set_url "$@";;
+    *) usage;;
+    esac
+}
+
+news_feed_set_url() {
+    [[ "$#" -eq 3 ]] || usage
+    local id=$1 link=$2 url=$3
+    "$(dirname "$BASH_SOURCE")/../postgresql/postgresql.sh" \
+        psql nextcloud nextcloud --command "\
+update oc_news_feeds
+set
+    link = '$link',
+    url = '$url',
+    location = '$url',
+    url_hash = md5('$url')
+where id = $id;
+"
 }
 
 main "$@"
